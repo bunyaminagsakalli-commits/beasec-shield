@@ -100,6 +100,14 @@ export default function ScanPage() {
       {/* Results */}
       {result && !loading && (
         <div className="space-y-6 animate-fade-in-up">
+          <div className="flex justify-end">
+            <button
+              onClick={() => exportScanReportPdf(result)}
+              className="flex items-center gap-2 px-4 py-2 rounded-lg bg-primary text-primary-foreground text-sm font-medium hover:bg-primary/90 transition-colors shadow-lg shadow-primary/20"
+            >
+              <Download className="h-4 w-4" /> Download PDF Report
+            </button>
+          </div>
           {/* Summary row */}
           <div className="grid md:grid-cols-3 gap-4">
             <RiskGauge score={result.score} level={result.riskLevel} />
