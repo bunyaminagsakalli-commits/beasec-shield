@@ -1,10 +1,11 @@
 import { useState, useCallback } from "react";
-import { Shield, Globe, AlertTriangle, CheckCircle, XCircle, Activity } from "lucide-react";
+import { Shield, Globe, AlertTriangle, CheckCircle, XCircle, Activity, Download } from "lucide-react";
 import ScanInput from "@/components/ScanInput";
 import RiskGauge from "@/components/RiskGauge";
 import StatusPill from "@/components/StatusPill";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
+import { exportScanReportPdf } from "@/lib/pdf-report";
 
 interface VTScanResult {
   target: string;
