@@ -42,6 +42,14 @@ export default function ScanPage() {
     }, 250);
 
     try {
+      // Ensure we have a session (anonymous if needed) so the edge function
+      // can authenticate the request — the API key never touches the client.
+      const { data: sessionData } = await supabase.auth.getSession();
+      if (!sessionData.session) {
+        const { error: anonErr } = await supabase.auth.signInAnonymously();
+        if (anonErr) throw new Error("Could not establish a secure session.");
+      }
+
       const { data, error: fnError } = await supabase.functions.invoke("virustotal-scan", {
         body: { target },
       });
@@ -55,7 +63,12 @@ export default function ScanPage() {
     } catch (e: any) {
       clearInterval(interval);
       setProgress(0);
-      const msg = e?.message || "Scan failed";
+      const raw = e?.message || "";
+      // Map known generic messages; never surface raw provider errors.
+      const msg =
+        raw && raw.length < 200 && !/[<>{}]/.test(raw)
+          ? raw
+          : "Scan failed. Please try again.";
       setError(msg);
       toast.error("Scan failed", { description: msg });
     } finally {
