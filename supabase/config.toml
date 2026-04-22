@@ -1,4 +1,4 @@
 project_id = "qpvnfmbbbucyyoeudnyk"
 
 [functions.virustotal-scan]
-verify_jwt = true
+verify_jwt = false
