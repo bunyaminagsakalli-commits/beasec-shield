@@ -1,4 +1,4 @@
-import { createClient } from "https://esm.sh/@supabase/supabase-js@2.45.0";
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2.74.0";
 
 const ALLOWED_ORIGINS = [
   "https://beasec.lovable.app",
@@ -134,8 +134,8 @@ Deno.serve(async (req) => {
     global: { headers: { Authorization: authHeader } },
   });
   const token = authHeader.replace(/^Bearer\s+/i, "");
-  const { data: claimsData, error: claimsError } = await supabase.auth.getClaims(token);
-  if (claimsError || !claimsData?.claims?.sub) {
+  const { data: userData, error: userError } = await supabase.auth.getUser(token);
+  if (userError || !userData?.user?.id) {
     return new Response(JSON.stringify({ error: "Unauthorized" }), { status: 401, headers: jsonHeaders });
   }
 
