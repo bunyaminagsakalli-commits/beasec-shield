@@ -1,15 +1,23 @@
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.74.0";
 
-const ALLOWED_ORIGINS = [
-  "https://beasec.lovable.app",
-  "https://id-preview--04e62900-6e78-4a2a-b080-1447188799ea.lovable.app",
-];
+const DEFAULT_ORIGIN = "https://beasec.lovable.app";
+
+function isAllowedOrigin(origin: string): boolean {
+  try {
+    const host = new URL(origin).hostname;
+    return (
+      host === "beasec.lovable.app" ||
+      host.endsWith(".lovable.app") ||
+      host.endsWith(".lovableproject.com") ||
+      host === "localhost"
+    );
+  } catch {
+    return false;
+  }
+}
 
 function buildCorsHeaders(origin: string | null): Record<string, string> {
-  const allowOrigin =
-    origin && (ALLOWED_ORIGINS.includes(origin) || /\.lovable\.app$/.test(new URL(origin).hostname) || /\.lovableproject\.com$/.test(new URL(origin).hostname))
-      ? origin
-      : ALLOWED_ORIGINS[0];
+  const allowOrigin = origin && isAllowedOrigin(origin) ? origin : DEFAULT_ORIGIN;
   return {
     "Access-Control-Allow-Origin": allowOrigin,
     "Vary": "Origin",
